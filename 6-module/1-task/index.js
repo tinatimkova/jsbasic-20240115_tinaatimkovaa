@@ -14,22 +14,22 @@
  */
 export default class UserTable {
   elem = document.createElement('table');
-  rows = null;  
+  #rows = null;  
 
   constructor(rows) {
-    this.rows = rows;
-    this.elem = this.render();
+    this.#rows = rows;
+    this.elem = this.#render();
   }
   
-  render() {
-    this.elem.insertAdjacentHTML('afterbegin', this.template());
+  #render() {
+    this.elem.insertAdjacentHTML('afterbegin', this.#template());
     
-    this.elem.addEventListener('click', (event) => this.onRemoveRow(event));
+    this.elem.addEventListener('click', (event) => this.#onRemoveRow(event));
     
     return this.elem;
   }
   
-  template() {
+  #template() {
     return `
     <thead>
       <tr>
@@ -40,7 +40,7 @@ export default class UserTable {
         <th></th>
        </tr>
        </thead>
-       <tbody>${this.rows.map(row => `
+       <tbody>${this.#rows.map(row => `
        <tr>
         <th>${row.name}</th>
         <th>${row.age}</th>
@@ -51,7 +51,7 @@ export default class UserTable {
        </tbody>`;
   }
   
-  onRemoveRow(event) {
+  #onRemoveRow(event) {
    if (event.target.dataset.action !== 'remove') {
      return;
    } 
