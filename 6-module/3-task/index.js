@@ -4,7 +4,7 @@ export default class Carousel {
 
   elem = null; 
   #slides = null;
-  #slideIndex = null;
+  #slideIndex = 0;
   #rightArrow = null;
   #leftArrow = null;
   #carousel = null;
@@ -12,10 +12,20 @@ export default class Carousel {
   constructor(slides) {
     this.#slides = slides;
     this.elem = this.#render();
-    this.#slideIndex = 0;
+    this.#slideIndex = this.#slideIndex;
     this.#rightArrow = this.#rightArrow;
     this.#leftArrow = this.#leftArrow; 
     this.#carousel = this.#carousel;
+  }
+
+  #onButtonClick = () => {
+
+    const event = new CustomEvent('product-add', {
+      detail: this.#slides[this.#slideIndex].id,
+      bubbles: true
+    });
+
+    this.elem.dispatchEvent(event);
   }
 
   #onMoveRight = () => {
@@ -42,6 +52,11 @@ export default class Carousel {
 
     this.#leftArrow.style.display = 'none';
 
+    const buttons = this.elem.querySelectorAll('.carousel__button');
+    for (let button of buttons) {
+      button.addEventListener('click', this.#onButtonClick);
+    }
+
     this.#rightArrow.addEventListener('click', this.#onMoveRight);
     this.#leftArrow.addEventListener('click', this.#onMoveLeft);
 
@@ -59,7 +74,7 @@ export default class Carousel {
       </div>
 
     <div class="carousel__inner">
-    ${this.#slides.map(slide => 
+    ${this.#slides.map(slide =>
       `<div class="carousel__slide" data-id=${slide.id}>
         <img src="/assets/images/carousel/${slide.image}" class="carousel__img" alt="slide">
         <div class="carousel__caption">
