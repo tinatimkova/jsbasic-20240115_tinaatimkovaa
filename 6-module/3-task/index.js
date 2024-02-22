@@ -2,7 +2,7 @@ import createElement from '../../assets/lib/create-element.js';
 
 export default class Carousel {
 
-  elem = null; 
+  #elem = null; 
   #slides = null;
   #slideIndex = 0;
   #rightArrow = null;
@@ -11,11 +11,11 @@ export default class Carousel {
 
   constructor(slides) {
     this.#slides = slides;
-    this.elem = this.#render();
-    this.#slideIndex = this.#slideIndex;
-    this.#rightArrow = this.#rightArrow;
-    this.#leftArrow = this.#leftArrow; 
-    this.#carousel = this.#carousel;
+    this.#elem = this.#render();
+  }
+
+  get elem() {
+    return this.#elem;
   }
 
   #onButtonClick = () => {
@@ -25,7 +25,7 @@ export default class Carousel {
       bubbles: true
     });
 
-    this.elem.dispatchEvent(event);
+    this.#elem.dispatchEvent(event);
   }
 
   #onMoveRight = () => {
@@ -44,15 +44,15 @@ export default class Carousel {
   };
 
   #render() {
-    this.elem = createElement(this.#template());
+    this.#elem = createElement(this.#template());
 
-    this.#rightArrow = this.elem.querySelector('.carousel__arrow_right');
-    this.#leftArrow = this.elem.querySelector('.carousel__arrow_left');
-    this.#carousel = this.elem.querySelector('.carousel__inner');
+    this.#rightArrow = this.#elem.querySelector('.carousel__arrow_right');
+    this.#leftArrow = this.#elem.querySelector('.carousel__arrow_left');
+    this.#carousel = this.#elem.querySelector('.carousel__inner');
 
     this.#leftArrow.style.display = 'none';
 
-    const buttons = this.elem.querySelectorAll('.carousel__button');
+    const buttons = this.#elem.querySelectorAll('.carousel__button');
     for (let button of buttons) {
       button.addEventListener('click', this.#onButtonClick);
     }
@@ -60,7 +60,7 @@ export default class Carousel {
     this.#rightArrow.addEventListener('click', this.#onMoveRight);
     this.#leftArrow.addEventListener('click', this.#onMoveLeft);
 
-    return this.elem;
+    return this.#elem;
   }
 
   #template() {

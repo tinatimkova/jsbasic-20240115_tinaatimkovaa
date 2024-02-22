@@ -1,13 +1,17 @@
 import createElement from '../../assets/lib/create-element.js';
 
 export default class ProductCard {
-  elem = null;
+  #elem = null;
   #product = null;
 
   constructor(product) {
     this.#product = product;
 
-    this.elem = this.#render();
+    this.#elem = this.#render();
+  }
+
+  get elem() {
+    return this.#elem;
   }
 
   #onButtonClick = () => {
@@ -16,16 +20,16 @@ export default class ProductCard {
       bubbles: true
     });
 
-    this.elem.dispatchEvent(event);
+    this.#elem.dispatchEvent(event);
   }
 
   #render() {
-    this.elem = createElement(this.#template());
+    this.#elem = createElement(this.#template());
 
-    const cardButton = this.elem.querySelector('.card__button');
+    const cardButton = this.#elem.querySelector('.card__button');
     cardButton.addEventListener('click', this.#onButtonClick);
 
-    return this.elem;
+    return this.#elem;
   }
 
   #template() {

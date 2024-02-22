@@ -13,20 +13,24 @@
  *
  */
 export default class UserTable {
-  elem = document.createElement('table');
+  #elem = document.createElement('table');
   #rows = null;  
 
   constructor(rows) {
     this.#rows = rows;
-    this.elem = this.#render();
+    this.#elem = this.#render();
+  }
+
+  get elem() {
+    return this.#elem;
   }
   
   #render() {
-    this.elem.insertAdjacentHTML('afterbegin', this.#template());
+    this.#elem.insertAdjacentHTML('afterbegin', this.#template());
     
-    this.elem.addEventListener('click', (event) => this.#onRemoveRow(event));
+    this.#elem.addEventListener('click', (event) => this.#onRemoveRow(event));
     
-    return this.elem;
+    return this.#elem;
   }
   
   #template() {
