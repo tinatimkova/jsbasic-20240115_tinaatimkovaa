@@ -18,10 +18,10 @@ export default class Carousel {
     return this.#elem;
   }
 
-  #onButtonClick = () => {
+  #onButtonClick = (e) => {
 
     const event = new CustomEvent('product-add', {
-      detail: this.#slides[this.#slideIndex].id,
+      detail: e.target.closest('.carousel__slide').dataset.id,
       bubbles: true
     });
 
