@@ -24,6 +24,9 @@ export default class RibbonMenu {
     this.#arrowRight.addEventListener('click', this.#scroll);
     this.#arrowLeft.addEventListener('click', this.#scroll);
 
+    const ribbonItems = this.elem.querySelectorAll('.ribbon__item');
+    ribbonItems.forEach(item => item.addEventListener('click', this.#selectCategory));
+
     return this.elem;
   }
 
@@ -44,10 +47,24 @@ export default class RibbonMenu {
     let isArrowRight = [...event.target.closest('button').classList].includes('ribbon__arrow_right');
 
     if (isArrowRight) this.#ribbonInner.scrollBy(350, 0);  
-
     if (isArrowLeft) this.#ribbonInner.scrollBy(-350, 0);
   
     this.#ribbonInner.addEventListener('scroll', this.#scrollState);
+  }
+
+  #selectCategory = (e) => {
+    e.preventDefault();
+    let selectedItem = this.elem.getElementsByClassName('ribbon__item_active')[0];
+    if (selectedItem) selectedItem.classList.remove('ribbon__item_active');
+
+    e.target.classList.add('ribbon__item_active');
+
+    let event = new CustomEvent('ribbon-select', {
+      detail: e.target.dataset.id, 
+      bubbles: true
+    })
+
+    this.elem.dispatchEvent(event);
   }
 
   #template() {
