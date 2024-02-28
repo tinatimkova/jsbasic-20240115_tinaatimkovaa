@@ -32,38 +32,50 @@ export default class StepSlider {
 
   #moveSlider = (e) => {
     let sliderWidth = e.currentTarget.clientWidth;
-    let pointerLeft = e.clientX - e.currentTarget.getBoundingClientRect().left;
-    let pointerPosition = Math.round(pointerLeft/sliderWidth*100);
+    let pointerCoords = e.clientX - e.currentTarget.getBoundingClientRect().left;
+    let pointerCoordsPercent = Math.round(pointerCoords/sliderWidth*100);
 
-    let step = this.#calcClosestStep(pointerPosition).step;
-    let leftPercent = this.#calcClosestStep(pointerPosition).leftPercent;
+    let pointer = this.#calcClosestStep(pointerCoordsPercent);
+    this.#value = pointer.step;
+    let leftPercent = pointer.leftPercent;
 
     this.elem.querySelector('.slider__thumb').style = `left: ${leftPercent}%`;
     this.elem.querySelector('.slider__progress').style = `width: ${leftPercent}%`;
-    this.elem.querySelector('.slider__value').innerText = step;
+    this.elem.querySelector('.slider__value').innerText = this.#value;
 
+    this.#moveStepActiveClass();
+    
     let event = new CustomEvent('slider-change', {
-      detail: step,
+      detail: this.#value,
       bubble: true
     })
 
     this.elem.dispatchEvent(event);
   }
 
-  #calcClosestStep (pointerPosition) {
-    let sliderScale = [];
+  #moveStepActiveClass() {
+    let stepActive = this.elem.querySelector('.slider__step-active');
+
+    if (stepActive) stepActive.classList.remove('slider__step-active');
+    const spans = Array.from(this.elem.querySelectorAll('.slider__steps span'));
+    spans[this.#value].classList.add('slider__step-active');
+  }
+
+  #calcClosestStep (pointerCoords) {
+    let sliderPercentScale = [];
     let step;
     let leftPercent;
 
-    for (let step=0; step <= 100; step+=100/(this.#steps-1)) {
-        sliderScale.push(step);
+    for (let i=0; i <= 100; i+=100/(this.#steps-1)) {
+        sliderPercentScale.push(i);
     }
 
-    sliderScale.forEach((num, i, arr) => {
-      if (i + 1 && num <= pointerPosition && arr[i+1] >= pointerPosition) {
-      step = Math.abs(num - pointerPosition) < Math.abs(arr[i+1] - pointerPosition) ? i: i+1; 
-      leftPercent = sliderScale[step];
-    }      
+    sliderPercentScale.forEach((num, index, arr) => {
+
+      if (index + 1 && num <= pointerCoords && arr[index+1] >= pointerCoords) {
+        step = Math.abs(num - pointerCoords) < Math.abs(arr[index+1] - pointerCoords) ? index : index + 1; 
+        leftPercent = sliderPercentScale[step];
+      }      
     });
 
     return { step, leftPercent };
