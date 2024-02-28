@@ -1,7 +1,6 @@
 import createElement from '../../assets/lib/create-element.js';
 
 export default class Modal {
-
   #modal = null;
 
   constructor() {
@@ -9,7 +8,7 @@ export default class Modal {
   }
 
   setTitle(title) {
-    this.#modal.querySelector('.modal__title').innerHTML = title;
+    this.#modal.querySelector('.modal__title').innerText = title;
   }
 
   setBody(body) {
@@ -21,22 +20,19 @@ export default class Modal {
     document.body.classList.add('is-modal-open');
 
     let closeButton = this.#modal.querySelector('.modal__close');
-    closeButton.addEventListener('click', this.#close);
+    closeButton.addEventListener('click', this.close);
     document.body.addEventListener('keydown', this.#checkKey);
   }
 
-  get close() {
-    return this.#close;
-  }
-
-  #close = () => {
-    document.body.querySelector('.modal').remove();
+  close = () => {
+    const modal = document.body.querySelector('.modal');
+    if (modal) modal.remove();
     document.body.classList.remove('is-modal-open');
     document.body.removeEventListener('keydown', this.#checkKey);
   }
 
   #checkKey = (event) => {
-    if (event.code === 'Escape') this.#close();
+    if (event.code === 'Escape') this.close();
   }
 
   #template() {
