@@ -22,25 +22,25 @@ export default class StepSlider {
       step == this.#value ? '<span class="slider__step-active"></span>' : '<span></span>');
     }
 
-    this.elem.querySelector('.slider__thumb').style = `left: ${(this.#value/(this.#steps - 1))*100}%`;
-    this.elem.querySelector('.slider__progress').style = `width: ${(this.#value/(this.#steps - 1))*100}%`;
+    const initPosition = (this.#value/(this.#steps - 1))*100;
 
-    this.elem.addEventListener('click', this.#moveSlider);
+    this.elem.querySelector('.slider__thumb').style = `left: ${initPosition}%`;
+    this.elem.querySelector('.slider__progress').style = `width: ${initPosition}%`;
+
+    this.elem.addEventListener('click', this.#onClick);
 
     return this.elem;
   }
 
-  #moveSlider = (e) => {
-    let sliderWidth = e.currentTarget.clientWidth;
-    let pointerCoords = e.clientX - e.currentTarget.getBoundingClientRect().left;
-    let pointerCoordsPercent = Math.round(pointerCoords/sliderWidth*100);
+  #onClick = (e) => {
+    let slider = this.elem.getBoundingClientRect(); 
+    let pointerCoords = Math.round((e.pageX - slider.left)/slider.width*100);
 
-    let pointer = this.#calcClosestStep(pointerCoordsPercent);
-    this.#value = pointer.step;
-    let leftPercent = pointer.leftPercent;
+    let { step, leftPercent} = this.#calcClosestStep(pointerCoords);
+    this.#value = step;
 
-    this.elem.querySelector('.slider__thumb').style = `left: ${leftPercent}%`;
-    this.elem.querySelector('.slider__progress').style = `width: ${leftPercent}%`;
+    this.elem.querySelector('.slider__thumb').style.left = `${leftPercent}%`;
+    this.elem.querySelector('.slider__progress').style.width = `${leftPercent}%`;
     this.elem.querySelector('.slider__value').innerText = this.#value;
 
     this.#moveStepActiveClass();
@@ -62,19 +62,19 @@ export default class StepSlider {
   }
 
   #calcClosestStep (pointerCoords) {
-    let sliderPercentScale = [];
+    let sliderTrack = [];
     let step;
     let leftPercent;
 
     for (let i=0; i <= 100; i+=100/(this.#steps-1)) {
-        sliderPercentScale.push(i);
+        sliderTrack.push(i);
     }
 
-    sliderPercentScale.forEach((num, index, arr) => {
+    sliderTrack.forEach((num, index, arr) => {
 
       if (index + 1 && num <= pointerCoords && arr[index+1] >= pointerCoords) {
         step = Math.abs(num - pointerCoords) < Math.abs(arr[index+1] - pointerCoords) ? index : index + 1; 
-        leftPercent = sliderPercentScale[step];
+        leftPercent = sliderTrack[step];
       }      
     });
 

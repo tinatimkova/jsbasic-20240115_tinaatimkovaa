@@ -21,12 +21,14 @@ export default class StepSlider {
       step == this.#value ? '<span class="slider__step-active"></span>' : '<span></span>');
     }
 
-    let thumb = this.elem.querySelector('.slider__thumb');
-    thumb.style.left = `${this.#value/(this.#steps-1)*100}%`;
+    const initPosition = this.#value/(this.#steps-1)*100;
+
+    const thumb = this.elem.querySelector('.slider__thumb');
+    thumb.style.left = `${initPosition}%`;
     thumb.addEventListener('pointerdown', this.#onDown);
     thumb.ondragstart = () => false;
 
-    this.elem.querySelector('.slider__progress').style.width = `${(this.#value/(this.#steps - 1))*100}%`;
+    this.elem.querySelector('.slider__progress').style.width = `${initPosition}%`;
 
     this.elem.addEventListener('click', this.#onClick);
 
@@ -34,17 +36,18 @@ export default class StepSlider {
   }
 
   #onClick = (e) => {
-    let positionLeft = Math.round((e.pageX - e.currentTarget.getBoundingClientRect().left)/e.currentTarget.getBoundingClientRect().width*100);
+    let slider = this.elem.getBoundingClientRect(); 
+    let pointerCoords = Math.round((e.pageX - slider.left)/slider.width*100);
 
-    let { step, leftPercent} = this.#calcClosestStep(positionLeft);
+    let { step, leftPercent} = this.#calcClosestStep(pointerCoords);
     this.#value = step;
+
     this.elem.querySelector('.slider__thumb').style.left = `${leftPercent}%`;
     this.elem.querySelector('.slider__progress').style.width = `${leftPercent}%`;
-
-    this.elem.querySelector('.slider__value').innerHTML = this.#value;
+    this.elem.querySelector('.slider__value').innerText = this.#value;
 
     this.#moveStepActiveClass();
-
+    
     let event = new CustomEvent('slider-change', {
       detail: this.#value,
       bubble: true
@@ -61,24 +64,26 @@ export default class StepSlider {
 
   #onMove = (event) => {
     event.preventDefault();
-    const thumb = this.elem.querySelector('.slider__thumb');
+
     let { left, width, right } = this.elem.getBoundingClientRect();
     let positionLeft = Math.round((event.pageX - left)/width*100);
     let { step } = this.#calcClosestStep(positionLeft);
 
     if (left <= event.pageX && right >= event.pageX) {
-      thumb.style.left = `${positionLeft}%`;
-      this.elem.querySelector('.slider__progress').style.width = `${positionLeft}%`;
       this.#value = step;
+      this.elem.querySelector('.slider__thumb').style.left = `${positionLeft}%`;
+      this.elem.querySelector('.slider__progress').style.width = `${positionLeft}%`;
       this.elem.querySelector('.slider__value').innerHTML = this.#value;
     }
   }
 
   #onUp = (e) => {
     e.preventDefault();
+
+    document.removeEventListener('pointermove', this.#onMove);
+
     this.#moveStepActiveClass();
     this.elem.classList.remove('slider_dragging');
-    document.removeEventListener('pointermove', this.#onMove);
 
     let event = new CustomEvent('slider-change', { 
       detail: this.#value,
@@ -89,19 +94,19 @@ export default class StepSlider {
   }
 
   #calcClosestStep (pointerCoords) {
-    let sliderPercentScale = [];
+    let sliderTrack = [];
     let step;
     let leftPercent;
 
     for (let i=0; i <= 100; i+=100/(this.#steps-1)) {
-        sliderPercentScale.push(i);
+        sliderTrack.push(i);
     }
 
-    sliderPercentScale.forEach((num, index, arr) => {
+    sliderTrack.forEach((num, index, arr) => {
 
       if (index + 1 && num <= pointerCoords && arr[index+1] >= pointerCoords) {
         step = Math.abs(num - pointerCoords) < Math.abs(arr[index+1] - pointerCoords) ? index : index + 1; 
-        leftPercent = sliderPercentScale[step];
+        leftPercent = sliderTrack[step];
       }      
     });
 
