@@ -1,9 +1,12 @@
 import createElement from '../../assets/lib/create-element.js';
 
 export default class CartIcon {
+
+  #initialTopCoord = null;
+
   constructor() {
     this.render();
-
+    this.#initialTopCoord = this.#initialTopCoord;
     this.addEventListeners();
   }
 
@@ -39,6 +42,19 @@ export default class CartIcon {
   }
 
   updatePosition() {
-    // ваш код ...
-  }
+    if (this.elem.offsetWidth) {
+
+      let offsetY = window.pageYOffSet || window.scrollY;
+
+      if (!this.#initialTopCoord) {
+        this.#initialTopCoord = this.elem.getBoundingClientRect().top + offsetY;
+      }
+
+        if (offsetY > this.#initialTopCoord) {
+          this.elem.style.position = 'fixed';
+        } else {
+          this.elem.style.position = 'absolute';
+        }
+      }
+    }
 }
