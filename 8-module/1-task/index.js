@@ -46,14 +46,36 @@ export default class CartIcon {
 
       let offsetY = window.pageYOffSet || window.scrollY;
 
-      if (!this.#initialTopCoord) {
-        this.#initialTopCoord = this.elem.getBoundingClientRect().top + offsetY;
-      }
+      if (!this.#initialTopCoord) this.#initialTopCoord = this.elem.getBoundingClientRect().top + offsetY;
+
+      let leftIndent = Math.min(
+        document.querySelector('.container').getBoundingClientRect().right + 20,
+        document.documentElement.clientWidth - this.elem.offsetWidth - 10
+      )+ 'px';
 
         if (offsetY > this.#initialTopCoord) {
-          this.elem.style.position = 'fixed';
+          Object.assign(this.elem.style, {
+            position: 'fixed',
+            top: '50px',
+            zIndex: 1e3,
+            left: leftIndent
+          });
         } else {
-          this.elem.style.position = 'absolute';
+          Object.assign(this.elem.style, {
+            position: '',
+            top: '',
+            zIndex: '',
+            left: ''
+          });
+        }
+
+        if (document.documentElement.clientWidth <= 767) {
+          Object.assign(this.elem.style, {
+            position: '',
+            top: '',
+            zIndex: '',
+            left: ''
+          });
         }
       }
     }
