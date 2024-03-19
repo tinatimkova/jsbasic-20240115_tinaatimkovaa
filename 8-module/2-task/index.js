@@ -72,8 +72,6 @@ export default class ProductGrid {
         return keyCount == matches;
       })
 
-      console.log(this.#filteredItems);
-
       if (this.#products.length != this.#filteredItems.length) {
         this.elem.querySelector('.products-grid__inner').innerHTML = '';
         this.#displayCards(this.#filteredItems);
