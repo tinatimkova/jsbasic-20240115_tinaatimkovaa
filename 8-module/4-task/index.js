@@ -43,9 +43,9 @@ export default class Cart {
   }
 
   getTotalPrice() {
-    let total = 0;
-    this.cartItems.forEach(item => total += item.product.price * item.count);
-    return total;
+    let cartTotal = 0;
+    this.cartItems.forEach(item => cartTotal += item.product.price * item.count);
+    return cartTotal;
   }
 
   renderProduct(product, count) {
@@ -68,7 +68,7 @@ export default class Cart {
               <img src="/assets/images/icons/square-plus-icon.svg" alt="plus">
             </button>
           </div>
-          <div class="cart-product__price">€${product.price.toFixed(2)}</div>
+          <div class="cart-product__price">€${(product.price*count).toFixed(2)}</div>
         </div>
       </div>
     </div>`);
@@ -89,9 +89,7 @@ export default class Cart {
         <div class="cart-buttons__buttons btn-group">
           <div class="cart-buttons__info">
             <span class="cart-buttons__info-text">total</span>
-            <span class="cart-buttons__info-price">€${this.getTotalPrice().toFixed(
-              2
-            )}</span>
+            <span class="cart-buttons__info-price">€${this.getTotalPrice().toFixed(2)}</span>
           </div>
           <button type="submit" class="cart-buttons__button btn-group__button button">order</button>
         </div>
@@ -131,23 +129,47 @@ export default class Cart {
 
       if (cartItem.count < 1) { 
         product.innerHTML = ''; 
-      } else { 
+      } 
       productCount.innerHTML = cartItem.count;
-      productPrice.innerHTML = `€${(cartItem.product.price*cartItem.count).toFixed(2)}`;
-      infoPrice.innerHTML = `€${this.getTotalPrice().toFixed(2)}`;
-      }
+      productPrice.textContent = `€${(cartItem.product.price*cartItem.count).toFixed(2)}`;
+      infoPrice.textContent = `€${this.getTotalPrice().toFixed(2)}`;
     };
 
     if (this.cartItems.length == 0) { 
       document.querySelector('.modal').remove();
       document.body.classList.remove('is-modal-open');
     }
-    
     this.cartIcon.update(this);
   }
 
-  onSubmit(event) {
-   console.log(event);
+  onSubmit = async(event) => {
+   event.preventDefault();
+   const submitButton = document.querySelector('button[type="submit"]');
+   submitButton.classList.add('is-loading');
+   const form = document.querySelector('.cart-form');
+   let response = await fetch('https://httpbin.org/post', {
+    method: "POST",
+    body: new FormData(form)
+    });
+
+   let result = await response;
+
+   if (result.ok) { // if request is successful
+    document.querySelector('.modal__title').innerHTML = 'Success!'; // change title of the modal
+    this.cartItems = []; // empty the cart
+    this.cartIcon.update(this); // update cart icon
+    // change body of the modal
+    document.querySelector('.modal__body').innerHTML = `<div class="modal__body-inner"> 
+  <p>
+    Order successful! Your order is being cooked :) <br>
+    We’ll notify you about delivery time shortly.<br>
+    <img src="/assets/images/delivery.gif">
+  </p>
+  </div>`
+   } else {
+    // add an error handler later
+    console.log("Error!!!");
+   }
   };
 
   addEventListeners() {
