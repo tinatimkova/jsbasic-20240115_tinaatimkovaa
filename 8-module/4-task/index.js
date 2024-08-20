@@ -173,7 +173,8 @@ export default class Cart {
   };
 
   addEventListeners() {
-    this.cartIcon.elem.onclick = () => this.renderModal();
+    this.cartIcon.elem.onclick = () => { 
+      this.renderModal();
+    }
   }
 }
-

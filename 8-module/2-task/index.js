@@ -24,6 +24,7 @@ export default class ProductGrid {
   }
 
   #displayCards(products) {
+    console.log(products.length);
     products.map(product => {
       let card = new ProductCard(product).elem;
       this.elem.querySelector('.products-grid__inner').append(card);

@@ -5,7 +5,7 @@ export default class StepSlider {
   #steps = null;
   #value = null;
 
-  constructor(steps, value = 1) {
+  constructor(steps, value = 3) {
     this.#steps = steps;
     this.#value = value;
     this.elem = this.#render();
@@ -39,7 +39,7 @@ export default class StepSlider {
     let slider = this.elem.getBoundingClientRect(); 
     let pointerCoords = Math.round((e.pageX - slider.left)/slider.width*100);
 
-    let { step, leftPercent} = this.#calcClosestStep(pointerCoords);
+    let { step, leftPercent} = this.#calcClosestStep(pointerCoords); 
     this.#value = step;
 
     this.elem.querySelector('.slider__thumb').style.left = `${leftPercent}%`;
@@ -66,7 +66,9 @@ export default class StepSlider {
     event.preventDefault();
 
     let { left, width, right } = this.elem.getBoundingClientRect();
+
     let positionLeft = Math.round((event.pageX - left)/width*100);
+
     let { step } = this.#calcClosestStep(positionLeft);
 
     if (left <= event.pageX && right >= event.pageX) {
@@ -102,12 +104,17 @@ export default class StepSlider {
         sliderTrack.push(i);
     }
 
-    sliderTrack.forEach((num, index, arr) => {
+    if (pointerCoords < 0) {
+      pointerCoords = 0;
+    } else if (pointerCoords > 100) {
+      pointerCoords = 100;
+    }
 
+    sliderTrack.forEach((num, index, arr) => {
       if (index + 1 && num <= pointerCoords && arr[index+1] >= pointerCoords) {
         step = Math.abs(num - pointerCoords) < Math.abs(arr[index+1] - pointerCoords) ? index : index + 1; 
         leftPercent = sliderTrack[step];
-      }      
+      }  
     });
 
     return { step, leftPercent };

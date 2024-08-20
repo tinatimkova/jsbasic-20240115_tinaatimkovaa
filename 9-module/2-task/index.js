@@ -16,6 +16,7 @@ export default class Main {
     this.productsGrid = this.productsGrid;
     this.stepSlider = this.stepSlider;
     this.ribbonMenu = this.ribbonMenu;
+    this.cartIcon = this.cartIcon;
     this.cart = this.cart;
   }
 
@@ -50,9 +51,15 @@ export default class Main {
     });
 
     document.body.addEventListener('product-add', event => {
-      this.cart.addProduct(event.detail);
+      let productToAdd = products.find(product => product.id == event.detail);
+      this.cart.addProduct(productToAdd);
     });
 
-    this.stepSlider.elem.addEventListener('slider-change', event => this.productsGrid.updateFilter({ maxSpiciness: event.detail }));
+    this.stepSlider.elem.addEventListener('slider-change', event => {
+      this.productsGrid.updateFilter({ maxSpiciness: event.detail });
+    });
+
+    this.ribbonMenu.elem.addEventListener('ribbon-select', event => this.productsGrid.updateFilter({ category: event.detail }));
+
   }
 }
