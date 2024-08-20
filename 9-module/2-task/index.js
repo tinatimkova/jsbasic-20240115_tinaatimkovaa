@@ -13,9 +13,46 @@ import Cart from '../../8-module/4-task/index.js';
 export default class Main {
 
   constructor() {
+    this.productsGrid = this.productsGrid;
+    this.stepSlider = this.stepSlider;
+    this.ribbonMenu = this.ribbonMenu;
+    this.cart = this.cart;
   }
 
   async render() {
-    // ... ваш код
+    let carousel = new Carousel(slides);
+    document.querySelector('[data-carousel-holder]').append(carousel.elem);
+
+    this.ribbonMenu = new RibbonMenu(categories);
+    document.querySelector('[data-ribbon-holder]').append(this.ribbonMenu.elem);
+
+    this.stepSlider = new StepSlider(5);
+    document.querySelector('[data-slider-holder]').append(this.stepSlider.elem);
+
+    let cartIcon = new CartIcon();
+    document.querySelector('[data-cart-icon-holder]').append(cartIcon.elem);
+
+    this.cart = new Cart(cartIcon);
+
+    let response = await fetch('products.json');
+    let products = await response.json();
+
+    this.productsGrid = new ProductsGrid(products);
+    let grid = document.querySelector('[data-products-grid-holder]');
+    grid.firstElementChild.remove();
+    grid.append(this.productsGrid.elem);
+
+    this.productsGrid.updateFilter({
+      noNuts: document.getElementById('nuts-checkbox').checked,
+      vegeterianOnly: document.getElementById('vegeterian-checkbox').checked,
+      maxSpiciness: this.stepSlider.value,
+      category: this.ribbonMenu.value
+    });
+
+    document.body.addEventListener('product-add', event => {
+      this.cart.addProduct(event.detail);
+    });
+
+    this.stepSlider.elem.addEventListener('slider-change', event => this.productsGrid.updateFilter({ maxSpiciness: event.detail }));
   }
 }

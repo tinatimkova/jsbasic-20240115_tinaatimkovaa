@@ -8,10 +8,12 @@ export default class CartIcon {
     this.render();
     this.#initialTopCoord = this.#initialTopCoord;
     this.addEventListeners();
+    this.elem = this.render();
   }
 
   render() {
     this.elem = createElement('<div class="cart-icon"></div>');
+    return this.elem;
   }
 
   update(cart) {
