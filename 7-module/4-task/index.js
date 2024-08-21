@@ -11,6 +11,10 @@ export default class StepSlider {
     this.elem = this.#render();
   }
 
+  get value() {
+    return this.#value;
+  }
+
   #render() {
     this.elem = createElement(this.#template());
 

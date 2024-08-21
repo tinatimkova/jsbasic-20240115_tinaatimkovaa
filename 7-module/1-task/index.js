@@ -7,16 +7,23 @@ export default class RibbonMenu {
   #ribbonInner = null;
   #arrowRight = null;
   #arrowLeft = null;
+  #selectedItem = null;
 
   constructor(categories) {
     this.#categories = categories;
     this.elem = this.#render();
   }
 
+  get value() {
+    return this.#selectedItem;
+  }
+
   #render() {
     this.elem = createElement(this.#template());
 
     this.#ribbonInner = this.elem.querySelector('.ribbon__inner');
+    this.#ribbonInner.firstElementChild.classList.add('ribbon__item_active');
+    this.#selectedItem = this.#categories[0].id;
 
     this.#arrowRight = this.elem.querySelector('.ribbon__arrow_right')
     this.#arrowLeft = this.elem.querySelector('.ribbon__arrow_left')
@@ -54,8 +61,8 @@ export default class RibbonMenu {
 
   #selectCategory = (e) => {
     e.preventDefault();
-    let selectedItem = this.elem.getElementsByClassName('ribbon__item_active')[0];
-    if (selectedItem) selectedItem.classList.remove('ribbon__item_active');
+    this.#selectedItem = this.elem.getElementsByClassName('ribbon__item_active')[0];
+    if (this.#selectedItem) this.#selectedItem.classList.remove('ribbon__item_active');
 
     e.target.classList.add('ribbon__item_active');
 

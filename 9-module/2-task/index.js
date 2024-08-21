@@ -30,6 +30,7 @@ export default class Main {
     this.stepSlider = new StepSlider(5);
     document.querySelector('[data-slider-holder]').append(this.stepSlider.elem);
 
+
     let cartIcon = new CartIcon();
     document.querySelector('[data-cart-icon-holder]').append(cartIcon.elem);
 

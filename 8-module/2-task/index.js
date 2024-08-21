@@ -76,6 +76,8 @@ export default class ProductGrid {
       if (this.#products.length != this.#filteredItems.length) {
         this.elem.querySelector('.products-grid__inner').innerHTML = '';
         this.#displayCards(this.#filteredItems);
+      } else {
+        this.#displayCards(this.#products);
       }
     } 
 
