@@ -7,7 +7,7 @@ export default class StepSlider {
   #value = null;
 
   constructor(steps, value = 1) {
-    this.#steps = steps;
+    this.#steps = steps.steps;
     this.#value = value;
     this.elem = this.#render();
   }
@@ -16,6 +16,8 @@ export default class StepSlider {
     this.elem = createElement(this.#template());
 
     let sliderSteps = this.elem.querySelector('.slider__steps');
+
+    console.log(this.#steps);
 
     for (let step = 0; step < this.#steps; step++) { 
       sliderSteps.insertAdjacentHTML('beforeend', 
