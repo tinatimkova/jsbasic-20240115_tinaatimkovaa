@@ -44,9 +44,12 @@ export default class Main {
     grid.firstElementChild.remove();
     grid.append(this.productsGrid.elem);
 
+    let nutsInput = document.getElementById('nuts-checkbox');
+    let vegeterianInput = document.getElementById('vegeterian-checkbox');
+
     this.productsGrid.updateFilter({
-      noNuts: document.getElementById('nuts-checkbox').checked,
-      vegeterianOnly: document.getElementById('vegeterian-checkbox').checked,
+      noNuts: nutsInput.checked,
+      vegeterianOnly: vegeterianInput.checked,
       maxSpiciness: this.stepSlider.value,
       category: this.ribbonMenu.value
     });
@@ -62,5 +65,12 @@ export default class Main {
 
     this.ribbonMenu.elem.addEventListener('ribbon-select', event => this.productsGrid.updateFilter({ category: event.detail }));
 
+    nutsInput.addEventListener('change', () => this.productsGrid.updateFilter({
+      noNuts: nutsInput.checked,
+    }));
+
+    vegeterianInput.addEventListener('change', () => this.productsGrid.updateFilter({
+      vegeterianOnly: vegeterianInput.checked,
+    }));
   }
 }

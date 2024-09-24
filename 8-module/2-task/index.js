@@ -46,7 +46,7 @@ export default class ProductGrid {
       let keyCount = 0;
   
       for (let key in this.filters) {
-        if (this.filters[key]) {
+        if (this.filters[key] || this.filters[key] === 0) {
           activeFilters[key] = this.filters[key];
           keyCount++;
         };
@@ -57,16 +57,16 @@ export default class ProductGrid {
         for (let filter in activeFilters) {
           switch(filter) {
             case 'noNuts':
-              activeFilters.noNuts == !product.nuts && matches++
+              activeFilters.noNuts == !product.nuts && matches++;
               break;
             case 'vegeterianOnly':
-              activeFilters.vegeterianOnly == product.vegeterian && matches++
+              activeFilters.vegeterianOnly == product.vegeterian && matches++;
               break;
             case 'maxSpiciness':
-              activeFilters.maxSpiciness >= product.spiciness && matches++
+              activeFilters.maxSpiciness >= product.spiciness && matches++;
               break;
             case 'category':
-              activeFilters.category == product.category && matches ++
+              activeFilters.category == product.category && matches++;
               break;
         }   
       }
@@ -80,5 +80,4 @@ export default class ProductGrid {
         this.#displayCards(this.#products);
       }
     } 
-
   }
