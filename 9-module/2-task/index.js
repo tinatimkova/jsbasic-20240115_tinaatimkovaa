@@ -27,7 +27,7 @@ export default class Main {
     this.ribbonMenu = new RibbonMenu(categories);
     document.querySelector('[data-ribbon-holder]').append(this.ribbonMenu.elem);
 
-    this.stepSlider = new StepSlider(5);
+    this.stepSlider = new StepSlider({ steps: 5, value: 3 });
     document.querySelector('[data-slider-holder]').append(this.stepSlider.elem);
 
 

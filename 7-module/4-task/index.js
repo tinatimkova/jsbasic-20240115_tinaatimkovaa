@@ -5,7 +5,7 @@ export default class StepSlider {
   #steps = null;
   #value = null;
 
-  constructor({ steps }, value = 0) {
+  constructor({ steps, value }) {
     this.#steps = steps;
     this.#value = value;
     this.elem = this.#render();
