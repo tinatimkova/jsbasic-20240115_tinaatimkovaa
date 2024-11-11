@@ -128,9 +128,10 @@ export default class Cart {
       let infoPrice = modalBody.querySelector(`.cart-buttons__info-price`);
 
       if (cartItem.count < 1) { 
-        product.innerHTML = ''; 
+        product.innerHTML = '';
       } 
-      productCount.innerHTML = cartItem.count;
+
+      productCount.textContent = cartItem.count;
       productPrice.textContent = `€${(cartItem.product.price*cartItem.count).toFixed(2)}`;
       infoPrice.textContent = `€${this.getTotalPrice().toFixed(2)}`;
     };
@@ -139,6 +140,7 @@ export default class Cart {
       document.querySelector('.modal').remove();
       document.body.classList.remove('is-modal-open');
     }
+
     this.cartIcon.update(this);
   }
 

@@ -5,7 +5,7 @@ export default class StepSlider {
   #steps = null;
   #value = null;
 
-  constructor({ steps }, value = 3) {
+  constructor({ steps }, value = 0) {
     this.#steps = steps;
     this.#value = value;
     this.elem = this.#render();
@@ -20,7 +20,7 @@ export default class StepSlider {
 
     let sliderSteps = this.elem.querySelector('.slider__steps');
 
-    for (let step = 0; step < this.#steps; step++) { 
+    for (let step = 0; step < this.#steps; step++) {
       sliderSteps.insertAdjacentHTML('beforeend', 
       step == this.#value ? '<span class="slider__step-active"></span>' : '<span></span>');
     }
