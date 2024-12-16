@@ -21,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/javascript-info/tasks-jsbasic/issues"
   },
-  "homepage": "https://github.com/javascript-info/tasks-jsbasic#readme",
+  "homepage": ".",
   "devDependencies": {
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.1.0",
